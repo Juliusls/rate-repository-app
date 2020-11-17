@@ -3,6 +3,7 @@ import Text from './Text';
 import { View, Image, StyleSheet } from 'react-native';
 import theme from '../theme';
 
+
 const cardTopStyles = StyleSheet.create({
     container: {
         display: 'flex',
@@ -24,11 +25,16 @@ const cardTopStyles = StyleSheet.create({
         fontSize: theme.fontSizes.body,
         paddingBottom: 8
     },
+    textFlex: {
+        width: 250,
+        flexDirection:'row'
+    },
     descriptionText: {
         color: theme.colors.textGrey,
         fontSize: theme.fontSizes.body,
         paddingBottom: 10,
-        flexWrap: "wrap",
+        flex: 1,
+        flexWrap: 'wrap'
     },
     languageText: {
         padding: 5,
@@ -53,7 +59,7 @@ const CardTopPart = ({ repo }) => {
                 <View>
                     <Text style={cardTopStyles.nameText}>{repo.fullName}</Text>
                 </View>
-                <View>
+                <View style={cardTopStyles.textFlex}>
                     <Text style={cardTopStyles.descriptionText}>{repo.description}</Text>
                 </View>
                 <View>
@@ -127,7 +133,7 @@ const RepositoryItemStyles = StyleSheet.create({
 
 const RepositoryItem = ({ repo }) => {
     return (
-        <View style={RepositoryItemStyles.container}>
+        <View key={repo.id} style={RepositoryItemStyles.container}>
             <CardTopPart repo={repo}/>
             <CardBottomPart repo={repo}/>
         </View>
