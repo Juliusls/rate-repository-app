@@ -31,6 +31,10 @@ const theme = {
     },
     card: {
         backgroundColor: '#24292e',
+    },
+    circle: {
+        width: 50,
+        height: 50
     }
     
 };

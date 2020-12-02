@@ -1,15 +1,24 @@
 import React from 'react';
 import { Formik } from 'formik';
-import FormikTextInput from './FormikTextInput';
-import { Text, TouchableWithoutFeedback, View, StyleSheet } from 'react-native';
-import theme from '../theme';
 import * as yup from 'yup';
-import useSignIn from '../hooks/useSignIn';
+import { Text, TouchableWithoutFeedback, View, StyleSheet } from 'react-native';
+import FormikTextInput from '../FormikTextInput';
+import theme from '../../utils/theme';
 
 const initialValues = {
     username: '',
     password: ''
 };
+
+const validationSchema = yup.object().shape({
+    username: yup
+        .string()
+        .required('Username is required'),
+    password: yup
+        .string()
+        .required('Password is required')
+});
+
 
 const styles = StyleSheet.create({
     button: {
@@ -35,40 +44,18 @@ const SignInForm = ({ onSubmit }) => {
         <View style={styles.view}>
             <FormikTextInput name='username' placeholder='Username' />
             <FormikTextInput name='password' placeholder='Password' secureTextEntry />
-            <TouchableWithoutFeedback onPress={onSubmit}>
+            <TouchableWithoutFeedback testID='signInButton' onPress={onSubmit}>
                 <View style={styles.button}>
                     <Text style={styles.buttonText}>
                         Sign In
                     </Text>
                 </View>
             </TouchableWithoutFeedback>
-
         </View>
     );
 };
 
-const validationSchema = yup.object().shape({
-    username: yup
-        .string()
-        .required('Username is required'),
-    password: yup
-        .string()
-        .required('Password is required')
-});
-
-const SignIn = () => {
-    const [signIn] = useSignIn();
-
-    const onSubmit = async (values) => {
-        const { username, password } = values;
-
-        try {
-            await signIn({ username, password });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
+const SignInContainer = ({onSubmit}) => {
     return (
         <Formik
             initialValues={initialValues}
@@ -80,4 +67,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default SignInContainer;

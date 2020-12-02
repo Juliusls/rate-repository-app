@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import Constants from 'expo-constants';
-import AppBarTab from './AppBarTab';
-import theme from '../theme';
 import { Link } from 'react-router-native';
-import { ApolloClient, useQuery } from '@apollo/client';
-import { GET_AUTHORIZES_USER } from '../graphql/queries';
-import AuthStorageContext from '../contexts/AuthStorageContext';
+import { useQuery } from '@apollo/client';
 import { useApolloClient } from '@apollo/client';
+import Constants from 'expo-constants';
 
+import AppBarTab from './AppBarTab';
+import theme from '../../utils/theme';
+import { GET_AUTHORIZED_USER } from '../../graphql/queries';
+import AuthStorageContext from '../../contexts/AuthStorageContext';
 
 const styles = StyleSheet.create({
     container: {
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-    const { data } = useQuery(GET_AUTHORIZES_USER);
+    const { data } = useQuery(GET_AUTHORIZED_USER);
     const authStorage = useContext(AuthStorageContext);
     const apolloClient = useApolloClient();
 
@@ -28,15 +28,22 @@ const AppBar = () => {
         await authStorage.removeAccessToken();
         await apolloClient.resetStore();
     };
-    
-    const signInOut = data && data.authorizedUser 
-        ? <AppBarTab onPress={signOut}>Sign Out</AppBarTab>
-        : <Link to="/signin" component={AppBarTab}>SignIn</Link>;
+
+    const signedInOut = data && data.authorizedUser 
+        ? <>
+            <Link to="/createareview" component={AppBarTab}>Create a review</Link>
+            <Link to="/myreviews" component={AppBarTab}>My Reviews</Link>
+            <AppBarTab onPress={signOut}>Sign Out</AppBarTab>
+        </>
+        : <>
+            <Link to="/signin" key='singin' component={AppBarTab}>Sign In</Link>
+            <Link to="/signup" key='singup' component={AppBarTab}>Sign Up</Link>
+        </>;
 
     return <View style={styles.container}>
         <ScrollView horizontal>
             <Link to="/" component={AppBarTab}>Repositories</Link>
-            {signInOut}
+            {signedInOut}
         </ScrollView>
     </View>;
 };
